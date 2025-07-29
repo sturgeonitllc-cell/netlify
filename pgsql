@@ -1,11 +1,7 @@
-repo-root/
+onelovecofilm.com/
+├── netlify.toml                      ✅ tells Netlify where everything is
 ├── netlify/
 │   └── functions/
-│       ├── submit-to-airtable.js    <-- ✅ Must be committed
-│       └── test-airtable.js         <-- Optional, if you use it
+│       └── submit-to-airtable.js    ✅ the actual serverless function
 ├── public_html/
-│   ├── index.html
-│   ├── index1.html                  <-- ✅ The live form page
-│   ├── script.js                    <-- ✅ Handles frontend fetch
-│   └── submit.js                    <-- ❓ (Only if actually used)
-├── netlify.toml                     <-- ✅ Required for deployment config
+│   └── index1.html                  ✅ your main webpage
