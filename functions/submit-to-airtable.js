@@ -1,45 +1,45 @@
 const fetch = require('node-fetch');
 
-exports.handler = async (event) => {
-  console.log("Event body:", event.body);
+exports.handler = async function(event) {
   try {
     const { name, email, message } = JSON.parse(event.body);
-    console.log("Parsed data:", data);
 
     const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
-    const BASE_ID = 'your_base_id';
-    const TABLE_NAME = 'your_table_name';
+    const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
+    const TABLE_NAME = 'Submissions'; // change to your Airtable table name
 
-    const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`, {
+    const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${TABLE_NAME}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         fields: {
           Name: name,
           Email: email,
-          Message: message,
-        },
-      }),
+          Message: message
+        }
+      })
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(error);
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ success: false, error: data })
+      };
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Submitted to Airtable successfully' }),
+      body: JSON.stringify({ success: true })
     };
   } catch (err) {
-    console.error("Error parsing data or sending to Airtable:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message || "Unknown Error!"}),
-      
+      body: JSON.stringify({ success: false, error: err.message })
     };
   }
 };
